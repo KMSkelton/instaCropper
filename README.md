@@ -1,8 +1,11 @@
 # instaCropper
-Python tool to rotate and crop photos for instagram
+Python tool to rotate and crop photos for Instagram. As a social media manager for a theatre group I find that most talent will submit portrait size images (vert or horiz). Instagram hates those. 
+
+While I -can- crop to size by hand... why when I can Python? The eventual idea is for this to batch-process horizontal and vertical images, and crop those equally well. 
+
 
 # Use
-instaCropper was built for OSX
+instaCropper was built for OSX and Python3. 
 
 Open finder
 
