@@ -29,7 +29,10 @@ def where_to_crop(og):
     top = int(input('Top start for crop. Default is 0: '))
   except ValueError:
     top = 0
-  calculated_side = short_side - left - left
+  if width < height:
+    calculated_side = short_side - left - left
+  else:     
+    calculated_side = short_side - top - top
   right = (calculated_side + left)
   bottom = (calculated_side + top)
 
@@ -62,7 +65,7 @@ def rotate_image(og):
   else:
     where_to_crop(og)
   new_og.show()
-  correct = input('Does this look right?')
+  correct = input('Does this look correct?')
   if correct == 'n':
     rotate_image(og)
   else:
