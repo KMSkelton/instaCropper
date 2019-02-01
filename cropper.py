@@ -31,7 +31,10 @@ def where_to_crop(og, file_to_crop):
     top = int(input('Top start for crop. Default is 0: '))
   except ValueError:
     top = 0
-  calculated_side = short_side - left - left
+  if width < height:
+    calculated_side = short_side - left - left
+  else:     
+    calculated_side = short_side - top - top
   right = (calculated_side + left)
   bottom = (calculated_side + top)
 
