@@ -4,7 +4,6 @@ from os import listdir
 from os.path import isfile, join
 
 def setup_crop(file_to_crop):
-  print(f'SETUP CROP to crop ===== {file_to_crop}')
   og = Image.open(file_to_crop)
   og.show()
   correct = input('Is this is the correct image?')
@@ -50,12 +49,8 @@ def where_to_crop(og, file_to_crop):
     save_cropped_file(og, file_to_crop)
 
 def save_cropped_file(og, file_to_crop):
-  print(f'OG ====== {og}')
-  print(f'save cropped to_crop == {file_to_crop}')
   file_path = os.path.dirname(os.path.abspath(file_to_crop))
   file_name = os.path.basename(file_to_crop)
-  print(f'FILEPATH IS: {file_path}')
-  print(f'FILE NAME IS: {file_name}')
   prefix = input('What prefix do you want for this file? (Default is "insta_": ') or "insta_"
   og.save(f'{file_path}/{prefix}{file_name}')
   print("File save complete.")
@@ -81,9 +76,7 @@ def rotate_image(og, file_to_crop):
 def batch_process(dir_to_crop):
   only_photos = [f for f in listdir(dir_to_crop) if isfile(join(dir_to_crop, f))]
   for photo in only_photos:
-    print(f'photo info? {dir_to_crop}/{photo}')
     to_crop = dir_to_crop + "/" + photo
-    print(f'BATCH PROCESS TO CROP  {to_crop}')
     setup_crop(to_crop)
 
 if __name__ == '__main__':

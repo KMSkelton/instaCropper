@@ -17,11 +17,15 @@ In terminal:
 
 `>>> python3 cropper.py`
 
+You will be asked whether you want to process a directory or a single file. Directory can be selected by typing d, D, or directory. The default is a single file. 
+
 `CMD + v` paste the path into the terminal.
 
 instaCropper will ask you to confirm that this is the correct photo.
 
-Pillow does odd things with image orientation. If the photo is not the in the orientation you expect, type n. You'll be asked which direction the image needs to be rotated. You must type the entire word: right, left, flipped
+You will be asked to confirm that this is the photo you'd like to modify each time.
+
+Pillow does odd things with image orientation. If the photo is not the in the orientation you expect, type n. You'll be asked which direction the image needs to be rotated. You may type the entire word: right, left, flipped, or just the first letter of the transform you want to make. 
 
 Enter how many pixels from the left edge you want to start the crop. InstaCropper will automatically figure the same distance from the right edge.
 
