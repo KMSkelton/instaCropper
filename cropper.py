@@ -68,7 +68,7 @@ def rotate_image(og, file_to_crop):
   else:
     where_to_crop(og, file_to_crop)
   new_og.show()
-  correct = input('Does this look right?')
+  correct = input('Does this look correct?')
   if correct == 'n':
     rotate_image(og, file_to_crop)
   else:
