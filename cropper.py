@@ -49,8 +49,14 @@ def save_cropped_file(og, file_to_crop):
   file_path = os.path.dirname(os.path.abspath(file_to_crop))
   file_name = os.path.basename(file_to_crop)
   prefix = input('What prefix do you want for this file? (Default is "insta_": ') or "insta_"
+  new_path = input('Would you like to save this in a new directory? (Default is yes) ') or 'yes'
+  if new_path == 'y' or new_path == 'yes':
+    added_path = input('What would you like to call this new subdirectory? (Default is "insta") ') or 'insta'
+    os.makedirs(file_path + '/' + added_path, exist_ok=True)
+    file_path = os.path.join(file_path, added_path)
+    print(f'new file path is: {file_path}')
   og.save(f'{file_path}/{prefix}{file_name}')
-  print("File save complete.")
+  print("File save complete. You may need to refresh your directory to see the changes.")
 
 def rotate_image(og, file_to_crop):
   dir = input('Does this need to be rotated right, left, or flipped? ') or 'none'
