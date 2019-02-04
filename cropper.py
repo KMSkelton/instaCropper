@@ -12,6 +12,7 @@ def setup_crop(file_to_crop):
   
   if og.width == og.height:
     print("This image is already a square")
+    save_cropped_file(og, file_to_crop)
   
   if og.width != og.height:
     orientation = input('Is this image in the correct orientation? ')
