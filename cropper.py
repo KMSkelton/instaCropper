@@ -21,6 +21,21 @@ def setup_crop(file_to_crop):
       where_to_crop(og, file_to_crop)
 
 def where_to_crop(og, file_to_crop):
+  '''
+  top, left, bottom and right refer to the pixel that creates the indicated side.
+  Because I want to automatically create the box, right will create an edge that is based on the left side. 
+  if the picture is portrait the width is less than the height; landscape is vise versa
+  Let's give portrait dimensions of 800 x 1000 for ease of math.
+
+  Starting the left at 100 means there are 700 pixels remaining in the image. We cannot start the
+  right side at left-side plus width because that it outside of the image. So right must be at least
+  width minus left-side; this is called the calculated_side. The calculated side is used both 
+  horizontally and vertically (from the top) to create the square that instagram wants.
+  To use the same crop on the other side of the same dimension, remove the crop again or don't account
+  for the distance of the first crop. Not accounting for the distance is "less math". 
+
+  '''
+
   width, height = og.size
   short_side = min(width, height)
   try: 
@@ -32,11 +47,19 @@ def where_to_crop(og, file_to_crop):
   except ValueError:
     top = 0
   if width < height:
-    calculated_side = short_side - left - left
+    calculated_side = short_side - left 
   else:     
-    calculated_side = short_side - top - top
-  right = (calculated_side + left)
-  bottom = (calculated_side + top)
+    calculated_side = short_side - top 
+  right_crop_option = input("Do you want the same crop on the right side? (Default is no): ") or 'no'
+  if right_crop_option == 'no' or right_crop_option == 'n':
+    right = (calculated_side + left) # from above note: 700 + 100 = 800px or the right edge of the pic
+  else:
+    right = calculated_side # right crop will be at 700px from the left edge of the original pic
+  bottom_crop_option = input("Do you want the same crop on the bottom side? (Default is no): ") or 'no'
+  if bottom_crop_option == 'no' or bottom_crop_option == 'n':
+    bottom = (calculated_side + top) # from above 
+  else:
+    bottom = calculated_side
 
   cropped_og = og.crop((left, top, right, bottom))
   cropped_og.show()
