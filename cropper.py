@@ -3,12 +3,21 @@ import os
 from os import listdir
 from os.path import isfile, join
 
-def setup_crop(file_to_crop):
-  og = Image.open(file_to_crop)
+def isImage(file_to_crop):
+  try: 
+    og = Image.open(file_to_crop)
+    if 'exif' in og.info:
+      setup_crop(og, file_to_crop)
+  except OSError:
+    print(f"{os.path.basename(file_to_crop)}  No EXIF data - skipping")
+    return False
+
+def setup_crop(og, file_to_crop):
   og.show()
   correct = input('Is this is the correct image?')
-  if correct == 'n':
-    setup_crop()
+  if correct is 'n':
+    print("Sorry about that, skipping...")
+    return False
 
   if og.width == og.height:
     print("This image is already a square")
@@ -16,13 +25,12 @@ def setup_crop(file_to_crop):
 
   if og.width != og.height:
     orientation = input('Is this image in the correct orientation? ')
-    if orientation == 'n':
+    if orientation is 'n':
       rotate_image(og, file_to_crop)
     else: 
       where_to_crop(og, file_to_crop)
 
 def where_to_crop(og, file_to_crop):
-  og.show()
   '''
   top, left, bottom and right refer to the pixel that creates the indicated side. All values are
   relative to top, left (0,0). 
@@ -34,12 +42,10 @@ def where_to_crop(og, file_to_crop):
 
   Want the same crop on both sides? Portrait: Subtract left from width (right = width - left) and 
   calc bottom as before. 
-
   '''
 
   width, height = og.size
   short_side = min(width, height)
-  print(f'short side:  {short_side}')
   try: 
     left = int(input('Left start for crop. Default is 0: ')) 
   except ValueError:
@@ -53,7 +59,6 @@ def where_to_crop(og, file_to_crop):
     bottom = calculated_side + top
     right = short_side
     right_crop_option = input("Do you want the same crop on the right side? (Default is no): ") or 'no'
-    print(right_crop_option)
     if right_crop_option is not 'no' and right_crop_option is not 'n':
       right = calculated_side
       bottom = (right - left) + top
@@ -63,7 +68,6 @@ def where_to_crop(og, file_to_crop):
     bottom = short_side 
     right = calculated_side + left
     bottom_crop_option = input("Do you want the same crop on the bottom side? (Default is no): ") or 'no'
-    print(bottom_crop_option)
     if bottom_crop_option is not 'no' and bottom_crop_option is not 'n':
       bottom = calculated_side 
       right = (bottom - top) + left
@@ -71,7 +75,7 @@ def where_to_crop(og, file_to_crop):
   cropped_og = og.crop((left, top, right, bottom))
   cropped_og.show()
 
-  save_or_trash = input('Does this look like what you wanted? ')
+  save_or_trash = input('Does this look like what you wanted? (Default is yes) ')
   if save_or_trash is 'n' or save_or_trash is 'N':
     where_to_crop(og, file_to_crop)
   else: 
@@ -113,7 +117,7 @@ def batch_process(dir_to_crop):
   only_photos = [f for f in listdir(dir_to_crop) if isfile(join(dir_to_crop, f))]
   for photo in only_photos:
     to_crop = dir_to_crop + "/" + photo
-    setup_crop(to_crop)
+    isImage(to_crop)
 
 if __name__ == '__main__':
   batch_or_single = input('Are you processing a -directory- or a -single- file? ') or 'single'
@@ -122,4 +126,4 @@ if __name__ == '__main__':
     batch_process(dir_to_crop)
   else:
     to_crop = input('Which photo needs cropping? Include extension: ')
-    setup_crop(to_crop)
+    isImage(to_crop)
