@@ -9,7 +9,7 @@ instaCropper was built for OSX and Python3. "yes" and 0 are the default values, 
 
 Open finder.
 
-Click the image that needs to be prepped for Instagram one time.
+Single-click the image or directory that needs to be prepped for Instagram.
 
 `option + CMD + c` (this copies the path and the filename)
 
@@ -21,15 +21,17 @@ You will be asked whether you want to process a directory or a single file. Dire
 
 `CMD + v` paste the path into the terminal.
 
-instaCropper will ask you to confirm that this is the correct photo.
+If there are files without EXIF data in the directory, instaCropper will notify you and move on to the next file.
+
+instaCropper will ask you to confirm that this is the correct photo. If it is not, instaCropper will apologize and move on.
 
 You will be asked to confirm that this is the photo you'd like to modify each time.
 
 Pillow does odd things with image orientation. If the photo is not the in the orientation you expect, type n. You'll be asked which direction the image needs to be rotated. You may type the entire word: right, left, flipped, or just the first letter of the transform you want to make. 
 
-Enter how many pixels from the left edge you want to start the crop. InstaCropper will automatically figure the same distance from the right edge.
+Enter how many pixels from the left edge you want to start the crop. For portrait images, instaCropper will give you the option to use that same distance on the right side.
 
-Enter how many pixels from the top edge of the image you want to start cropping. 
+Enter how many pixels from the top edge of the image you want to start cropping.For landscape images, instaCropper will ask if you want to use that same distance on the bottom.
 
 instaCropper uses the distances entered and the size of the image to figure the dimensions of the crop square. 
 
