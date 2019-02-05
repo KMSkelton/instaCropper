@@ -9,11 +9,11 @@ def setup_crop(file_to_crop):
   correct = input('Is this is the correct image?')
   if correct == 'n':
     setup_crop()
-  
+
   if og.width == og.height:
     print("This image is already a square")
     save_cropped_file(og, file_to_crop)
-  
+
   if og.width != og.height:
     orientation = input('Is this image in the correct orientation? ')
     if orientation == 'n':
@@ -22,23 +22,24 @@ def setup_crop(file_to_crop):
       where_to_crop(og, file_to_crop)
 
 def where_to_crop(og, file_to_crop):
+  og.show()
   '''
-  top, left, bottom and right refer to the pixel that creates the indicated side.
-  Because I want to automatically create the box, right will create an edge that is based on the left side. 
-  if the picture is portrait the width is less than the height; landscape is vise versa
-  Let's give portrait dimensions of 800 x 1000 for ease of math.
+  top, left, bottom and right refer to the pixel that creates the indicated side. All values are
+  relative to top, left (0,0). 
+  For portrait, the right side is the width. 
+  To calculate the bottom: difference between right and left is the length of the side. Add that to the
+  top to get the proper distance.
+  For landscape: calculate right using height. Take difference of bottom and top, add that to 
+  left.
 
-  Starting the left at 100 means there are 700 pixels remaining in the image. We cannot start the
-  right side at left-side plus width because that it outside of the image. So right must be at least
-  width minus left-side; this is called the calculated_side. The calculated side is used both 
-  horizontally and vertically (from the top) to create the square that instagram wants.
-  To use the same crop on the other side of the same dimension, remove the crop again or don't account
-  for the distance of the first crop. Not accounting for the distance is "less math". 
+  Want the same crop on both sides? Portrait: Subtract left from width (right = width - left) and 
+  calc bottom as before. 
 
   '''
 
   width, height = og.size
   short_side = min(width, height)
+  print(f'short side:  {short_side}')
   try: 
     left = int(input('Left start for crop. Default is 0: ')) 
   except ValueError:
@@ -49,24 +50,29 @@ def where_to_crop(og, file_to_crop):
     top = 0
   if width < height:
     calculated_side = short_side - left 
+    bottom = calculated_side + top
+    right = short_side
+    right_crop_option = input("Do you want the same crop on the right side? (Default is no): ") or 'no'
+    print(right_crop_option)
+    if right_crop_option is not 'no' and right_crop_option is not 'n':
+      right = calculated_side
+      bottom = (right - left) + top
+
   else:     
     calculated_side = short_side - top 
-  right_crop_option = input("Do you want the same crop on the right side? (Default is no): ") or 'no'
-  if right_crop_option == 'no' or right_crop_option == 'n':
-    right = (calculated_side + left) # from above note: 700 + 100 = 800px or the right edge of the pic
-  else:
-    right = calculated_side # right crop will be at 700px from the left edge of the original pic
-  bottom_crop_option = input("Do you want the same crop on the bottom side? (Default is no): ") or 'no'
-  if bottom_crop_option == 'no' or bottom_crop_option == 'n':
-    bottom = (calculated_side + top) # from above 
-  else:
-    bottom = calculated_side
-
+    bottom = short_side 
+    right = calculated_side + left
+    bottom_crop_option = input("Do you want the same crop on the bottom side? (Default is no): ") or 'no'
+    print(bottom_crop_option)
+    if bottom_crop_option is not 'no' and bottom_crop_option is not 'n':
+      bottom = calculated_side 
+      right = (bottom - top) + left
+      
   cropped_og = og.crop((left, top, right, bottom))
   cropped_og.show()
 
   save_or_trash = input('Does this look like what you wanted? ')
-  if save_or_trash == 'n':
+  if save_or_trash is 'n' or save_or_trash is 'N':
     where_to_crop(og, file_to_crop)
   else: 
     og = cropped_og
@@ -87,17 +93,17 @@ def save_cropped_file(og, file_to_crop):
 
 def rotate_image(og, file_to_crop):
   dir = input('Does this need to be rotated right, left, or flipped? ') or 'none'
-  if dir == 'r' or dir =='right':
+  if dir is 'r' or dir is 'right':
     new_og = og.transpose(Image.ROTATE_270)
-  elif dir ==  'l' or dir == 'left':
+  elif dir is  'l' or dir is 'left':
     new_og = og.transpose(Image.ROTATE_90)
-  elif dir == 'f' or dir == 'flipped':
+  elif dir is 'f' or dir is 'flipped':
     new_og = og.transpose(Image.ROTATE_180)
   else:
     where_to_crop(og, file_to_crop)
   new_og.show()
   correct = input('Does this look correct?')
-  if correct == 'n':
+  if correct is 'n':
     rotate_image(og, file_to_crop)
   else:
     og = new_og
@@ -111,7 +117,7 @@ def batch_process(dir_to_crop):
 
 if __name__ == '__main__':
   batch_or_single = input('Are you processing a -directory- or a -single- file? ') or 'single'
-  if batch_or_single == 'directory' or batch_or_single == 'd' or batch_or_single == 'D':
+  if batch_or_single is 'directory' or batch_or_single is 'd' or batch_or_single is 'D':
     dir_to_crop = input('Full directory path: ')
     batch_process(dir_to_crop)
   else:
